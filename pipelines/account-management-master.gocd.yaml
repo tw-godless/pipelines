@@ -5,64 +5,26 @@ pipelines:
     locking: off
     # setting materials
     materials:
-      app-repo:
-        git: git@gitlab.com:otr/account-management.git
+      app:
+        git: git@github.com:sjjianshen/mst-user-service.git
         branch: master
-        destination: app
-      devops-buildtools:
-        git: git@gitlab.com:otr/buildtools.git
-        blacklist:
-          - "**/*.*"
-        branch: master
-        auto_update: false
-        destination: buildtools
     # setting stages
     stages:
       - test-basic:
           clean_workspace: true
-          approval: manual
           jobs:
-            pmd-verification:
-              resources:
-                - azure-vm
-              tasks:
-                - exec:
-                    command: cp
-                    arguments:
-                      - "-f"
-                      - "buildtools/scripts/java_style_check.sh"
-                      - "app"
-                    run_if: passed
-                - exec:
-                    command: bash
-                    arguments:
-                      - "java_style_check.sh"
-                    working_directory: app
-                    run_if: passed
             test-unit:
-              resources:
-                - azure-vm
               tasks:
-                - exec:
-                    command: cp
-                    arguments:
-                      - "-f"
-                      - "buildtools/scripts/java_unit_test.sh"
-                      - "app"
-                    run_if: passed
                 - exec:
                     command: bash
                     arguments:
-                      - "java_unit_test.sh"
-                    working_directory: app
+                      - "-e"
+                      - "./scripts/test.sh"
                     run_if: passed
       - test-integration:
-          fetch_materials: yes
           clean_workspace: yes
           jobs:
             test:
-              resources:
-                - azure-vm
               tasks:
                 - exec:
                     command: ls
@@ -74,8 +36,6 @@ pipelines:
           clean_workspace: yes
           jobs:
             test-coverage:
-              resources:
-                - azure-vm
               tasks:
                 - exec:
                     command: ls
@@ -83,76 +43,24 @@ pipelines:
                       - "-al"
                     run_if: passed
       - build:
-          fetch_materials: yes
           clean_workspace: yes
           jobs:
             build:
-              resources:
-                - azure-vm
               tasks:
-                - exec:
-                    command: cp
-                    arguments:
-                      - "-f"
-                      - "buildtools/scripts/pre_build_java_app.sh"
-                      - "buildtools/scripts/build_and_publish_image_v2.sh"
-                      - "app"
-                    run_if: passed
-                - exec:
-                    command: bash
-                    arguments:
-                      - "pre_build_java_app.sh"
-                    working_directory: app
-                    run_if: passed
-                - exec:
-                    command: bash
-                    arguments:
-                      - "build_and_publish_image_v2.sh"
-                      - "master"
-                    working_directory: app
-                    run_if: passed
-      - deployment-qa:
-          fetch_materials: yes
-          clean_workspace: yes
-          environment_variables:
-            AD_CLIENTID: 3eaa5ff7-32f7-4907-82dd-a121dbdcfbdf
-            CONFIG_SERVER_URL: http://config-server.common:8080
-            RANCHER_URL: http://172.21.3.40:8443/v1/projects/1a57
-            RANCHER_ACCESS_KEY: 7981C6E34C11E1310780
-          secure_variables:
-            AD_SECRET: "QcFQ9wrgaR5exap/U2C3lPip925q02MDWdcCTsXiVOTMJ+L2uE7105/Rb1+pzzjq"
-            RANCHER_SECRET_KEY: "mY9Bx/XCSmHVzyvZCwaKFxzARfhQ6BrgnUOTD49JkjquuEyeCzR0BSBiYwZHgXhW"
-          jobs:
-            deploy:
-              resources:
-                - azure-vm
-              tasks:
-                - exec:
-                    command: cp
-                    arguments:
-                      - "-f"
-                      - "buildtools/resources/rancher-compose.yml"
-                      - "app"
-                    run_if: passed
-                - exec:
-                    command: cp
-                    arguments:
-                      - "-f"
-                      - "buildtools/resources/docker-compose_v2.yml"
-                      - "app/docker-compose.yml"
-                    run_if: passed
-                - exec:
-                    command: cp
-                    arguments:
-                      - "-f"
-                      - "buildtools/scripts/deploy_v2.sh"
-                      - "app"
-                    run_if: passed
                 - exec:
                     command: bash
                     arguments:
                       - "-e"
-                      - "deploy_v2.sh"
-                      - "qa-sales"
-                    working_directory: app
+                      - "./scripts/build.sh"
+                    run_if: passed
+      - deployment-qa:
+          clean_workspace: yes
+          jobs:
+            deploy:
+              tasks:
+                - exec:
+                    command: bash
+                    arguments:
+                      - "-e"
+                      - "./scripts/build.sh"
                     run_if: passed
