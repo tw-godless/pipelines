@@ -62,5 +62,5 @@ pipelines:
                     command: bash
                     arguments:
                       - "-e"
-                      - "./scripts/build.sh"
+                      - "./scripts/deploy.sh"
                     run_if: passed
