@@ -1,5 +1,5 @@
 pipelines:
-  account-management-master:
+  mst-user-service:
     group: tw-ms-train
     label_template: "${COUNT}"
     locking: off
