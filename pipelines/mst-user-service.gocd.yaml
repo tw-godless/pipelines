@@ -6,7 +6,7 @@ pipelines:
     # setting materials
     materials:
       app:
-        git: git@github.com:sjjianshen/mst-user-service.git
+        git: git@github.com:tw-godless/mst-user-service.git
         branch: master
     # setting stages
     stages:
@@ -19,7 +19,8 @@ pipelines:
                     command: bash
                     arguments:
                       - "-e"
-                      - "./scripts/test.sh"
+                      - "./scripts/build.sh"
+                      - "test"
                     run_if: passed
       - test-integration:
           clean_workspace: yes
@@ -52,6 +53,7 @@ pipelines:
                     arguments:
                       - "-e"
                       - "./scripts/build.sh"
+                      - "build"
                     run_if: passed
       - deployment-qa:
           clean_workspace: yes
@@ -62,5 +64,6 @@ pipelines:
                     command: bash
                     arguments:
                       - "-e"
-                      - "./scripts/deploy.sh"
+                      - "./scripts/build.sh"
+                      - "deploy"
                     run_if: passed
