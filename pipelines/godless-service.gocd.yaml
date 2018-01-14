@@ -1,0 +1,205 @@
+pipelines:
+  mst-user-service:
+    group: tw-ms-train
+    label_template: "${COUNT}"
+    locking: off
+    # setting materials
+    materials:
+      app:
+        git: git@github.com:tw-godless/mst-user-service.git
+        branch: master
+    # setting stages
+    stages:
+      - test-basic:
+          clean_workspace: true
+          jobs:
+            test-unit:
+              tasks:
+                - exec:
+                    command: bash
+                    arguments:
+                      - "-e"
+                      - "./scripts/build.sh"
+                      - "test"
+                    run_if: passed
+      - test-integration:
+          clean_workspace: yes
+          jobs:
+            test:
+              tasks:
+                - exec:
+                    command: ls
+                    arguments:
+                      - "-al"
+                    run_if: passed
+      - test-coverage:
+          fetch_materials: yes
+          clean_workspace: yes
+          jobs:
+            test-coverage:
+              tasks:
+                - exec:
+                    command: ls
+                    arguments:
+                      - "-al"
+                    run_if: passed
+      - build:
+          clean_workspace: yes
+          jobs:
+            build:
+              tasks:
+                - exec:
+                    command: bash
+                    arguments:
+                      - "-e"
+                      - "./scripts/build.sh"
+                      - "build"
+                    run_if: passed
+      - deployment-qa:
+          clean_workspace: yes
+          jobs:
+            deploy:
+              tasks:
+                - exec:
+                    command: bash
+                    arguments:
+                      - "-e"
+                      - "./scripts/build.sh"
+                      - "deploy"
+                    run_if: passed
+  mst-goods-service:
+    group: tw-ms-train
+    label_template: "${COUNT}"
+    locking: off
+    # setting materials
+    materials:
+      app:
+        git: git@github.com:tw-godless/mst-goods-service.git
+        branch: master
+    # setting stages
+    stages:
+      - test-basic:
+          clean_workspace: true
+          jobs:
+            test-unit:
+              tasks:
+                - exec:
+                    command: bash
+                    arguments:
+                      - "-e"
+                      - "./scripts/build.sh"
+                      - "test"
+                    run_if: passed
+      - test-integration:
+          clean_workspace: yes
+          jobs:
+            test:
+              tasks:
+                - exec:
+                    command: ls
+                    arguments:
+                      - "-al"
+                    run_if: passed
+      - test-coverage:
+          fetch_materials: yes
+          clean_workspace: yes
+          jobs:
+            test-coverage:
+              tasks:
+                - exec:
+                    command: ls
+                    arguments:
+                      - "-al"
+                    run_if: passed
+      - build:
+          clean_workspace: yes
+          jobs:
+            build:
+              tasks:
+                - exec:
+                    command: bash
+                    arguments:
+                      - "-e"
+                      - "./scripts/build.sh"
+                      - "build"
+                    run_if: passed
+      - deployment-qa:
+          clean_workspace: yes
+          jobs:
+            deploy:
+              tasks:
+                - exec:
+                    command: bash
+                    arguments:
+                      - "-e"
+                      - "./scripts/build.sh"
+                      - "deploy"
+                    run_if: passed
+  mst-goods-service:
+    group: tw-ms-train
+    label_template: "${COUNT}"
+    locking: off
+    # setting materials
+    materials:
+      app:
+        git: git@github.com:tw-godless/mst-order-service.git
+        branch: master
+    # setting stages
+    stages:
+      - test-basic:
+          clean_workspace: true
+          jobs:
+            test-unit:
+              tasks:
+                - exec:
+                    command: bash
+                    arguments:
+                      - "-e"
+                      - "./scripts/build.sh"
+                      - "test"
+                    run_if: passed
+      - test-integration:
+          clean_workspace: yes
+          jobs:
+            test:
+              tasks:
+                - exec:
+                    command: ls
+                    arguments:
+                      - "-al"
+                    run_if: passed
+      - test-coverage:
+          fetch_materials: yes
+          clean_workspace: yes
+          jobs:
+            test-coverage:
+              tasks:
+                - exec:
+                    command: ls
+                    arguments:
+                      - "-al"
+                    run_if: passed
+      - build:
+          clean_workspace: yes
+          jobs:
+            build:
+              tasks:
+                - exec:
+                    command: bash
+                    arguments:
+                      - "-e"
+                      - "./scripts/build.sh"
+                      - "build"
+                    run_if: passed
+      - deployment-qa:
+          clean_workspace: yes
+          jobs:
+            deploy:
+              tasks:
+                - exec:
+                    command: bash
+                    arguments:
+                      - "-e"
+                      - "./scripts/build.sh"
+                      - "deploy"
+                    run_if: passed
