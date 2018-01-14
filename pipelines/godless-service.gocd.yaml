@@ -135,7 +135,7 @@ pipelines:
                       - "./scripts/build.sh"
                       - "deploy"
                     run_if: passed
-  mst-goods-service:
+  mst-order-service:
     group: tw-ms-train
     label_template: "${COUNT}"
     locking: off
